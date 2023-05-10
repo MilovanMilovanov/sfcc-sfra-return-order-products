@@ -1,0 +1,14 @@
+.product-summary-block {
+    overflow: hidden;
+    padding-bottom: .6rem;
+}
+
+.item-attribute {
+    margin: .2rem;
+}
+
+.item-attribute b {
+    display: inline-flex;
+    word-wrap: break-word;
+    width: 50%;
+}

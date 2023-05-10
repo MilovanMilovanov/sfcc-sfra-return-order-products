@@ -1,0 +1,114 @@
+<isdecorate template="common/layout/page">
+    <isscript>
+    var URLUtils = require('dw/web/URLUtils');
+        var assets = require('*/cartridge/scripts/assets.js');
+        assets.addCss('/css/returnProducts.css');
+        assets.addJs('js/validateForm.js');
+    </isscript>
+
+
+    <div class="container text-center my-4">
+
+        <h2 class='text-primary mb-4'>
+            <isprint value="${Resource.msg('title.orderproductlist', 'account', null)}" encoding="on" />
+        </h2>
+
+        <div class="px-0 px-md-4 m-auto card order-product-summary col-sm-12 col-md-9 text-center">
+            <div class="card-body px-0 pb-2">
+                <div class="product-summary-block">
+
+                    <form id="products-return-form" action="${URLUtils.url('Order-Confirmation')}" method="POST">
+
+                        <isloop items="${pdict.order.shipping[0].productLineItems.items}" var="lineItem">
+
+                            <div class="product-line-item" data-product-line-item="${lineItem.UUID}">
+
+                                <isif condition="${lineItem.productType === 'bundle'}">
+                                    <div class="bundle-includes">${Resource.msg('msg.bundle.includes', 'cart', null)}
+                                    </div>
+                                    <isinclude template="cart/productCard/cartProductCardBundledItems" />
+                                <iselse/>
+
+                                    <div class="product-line-item-details">
+
+                                        <div class='d-flex'>
+                                            <div class="item-image">
+                                                <img class="product-image" src="${lineItem.images.small[0].url}"
+                                                    alt="${lineItem.images.small[0].alt}"
+                                                    title="${lineItem.images.small[0].title}" />
+                                            </div>
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <div class="text-left w-100 item-attributes">
+                                                    <p class="item-attribute">
+                                                        ${Resource.msg('label.orderhistory.dateordered', 'account', null)}
+                                                        <b>
+                                                            <isprint value="${pdict.order.creationDate}"
+                                                                style="DATE_SHORT" />
+                                                        </b>
+                                                    </p>
+                                                    <p class="item-attribute">
+                                                        ${Resource.msg('label.orderhistory.totalitems', 'account', null)}
+                                                        <b>
+                                                            <isprint value="${lineItem.quantity.toFixed(0)}"
+                                                                encoding="on" />
+                                                        </b>
+                                                    </p>
+                                                    <p class="item-attribute">
+                                                        ${Resource.msg('label.productcardreturn.total.price.each', 'account', null)}
+                                                        <b>
+                                                            <isprint value="${lineItem.priceTotal.price}"
+                                                                encoding="on" />
+                                                        </b>
+                                                    </p>
+
+                                                    <isif
+                                                        condition="${(pdict.order && !pdict.order.orderStatus) || miniCart}">
+                                                        <isinclude
+                                                            template="cart/productCard/cartProductCardAvailability" />
+                                                    </isif>
+                                                </div>
+
+
+                                                <div class="d-row">
+                                                    <select name="reason_${lineItem.id}" class="form-control mb-2"
+                                                        aria-required="true">
+                                                        <option value="default">
+                                                            ${Resource.msg('select.reason.productcardreturn', 'account', null)}
+                                                        </option>
+                                                        <isloop items="${pdict.returnProductReasonsRef}" var="reason">
+                                                            <option value="${reason}">${reason}</option>
+                                                        </isloop>
+                                                    </select>
+                                                    <select name="quantity_${lineItem.id}" class="form-control"
+                                                        aria-required="true">
+                                                        <option value="default">
+                                                            ${Resource.msg('select.quantity.productcardreturn', 'account', null)}</option>
+                                                        <isloop
+                                                            items="${(Array(lineItem.quantity)).fill().map((_, i) => i + 1)}"
+                                                            var="num">
+                                                            <option value="${num.toFixed(0)}">${num.toFixed(0)}
+                                                            </option>
+                                                        </isloop>
+                                                    </select>
+                                                    <input type="hidden" name="lineItemId" value="${lineItem.id}" />
+                                                    <input type="hidden" name="orderData"
+                                                        value="${JSON.stringify(pdict.order)}" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </isif>
+                            </div>
+
+                            <hr class="line-item-divider my-4" />
+
+                        </isloop>
+
+                        <button type="button"
+                            class="btn btn-primary return-products-btn col-auto m-0">${Resource.msg('submit.return.poducts.config', 'account', null)}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</isdecorate>
