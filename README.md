@@ -2,6 +2,8 @@
 
 i had to create a process for returning products from an order.
 
+You can see the return button on the order, only when the shipping Status from the Order is changed to "SHIPPED" in the Business Manager
+
 The first template of the process is returnProductsConfig.isml
 in which next to every item in the order you have a drop down with reasons to return, that are created as a preference from the busness manager.
 
